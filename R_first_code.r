@@ -1,15 +1,16 @@
-#  This is my first code in github! QUite exciting, right?
+#  This is my first code in github!
 
 # Here are the input data
+# c(100, 200, 300, 400, 500) is an array (the R data objects which can store data in more than two dimensions.)
 # Costanza data on streams
-water <- c(100, 200, 300, 400, 500)
+water <- c(100, 200, 300, 400, 500) #we assaign a name to the array with <- #the space between the comma and the next number is not mandatory, it's just for fashion 
 water
 
 # Marta data on fishes genomes
 fishes <- c(10, 50, 60, 100, 200)
 fishes
 
-# plot the diversity of fishes (y) versus the amount of water (x)
+# plot the diversity of fishes (Y) versus the amount of water (X) #Generic X-Y plotting
 # a funtcion is used with arguments inside! 
 plot(water, fishes)
 
