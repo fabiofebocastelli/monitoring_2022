@@ -37,18 +37,19 @@ setwd("~/lab/")
 write.table(streams, file="my_first_table.txt")
 
 # Some colleagues did send us a table How to import it in R?
-read.table("my_first_table.txt")
-# let's assign it to an object uinside R
-ducciotable <- read.table("my_first_table.txt")
+read.table("my_first_table.txt") #we are going outside R so we need to use quotes ""
+# let's assign it to an object inside R
+ducciotable <- read.table("my_first_table.txt") #this table is called dataframe
 
-# the first statistics for lazy beautiful people
+# we want some statistics, in order to do that quickly I'll use the summary function and the object
 summary(ducciotable)
 
-# Marta does not like water
-# Marta wants to get info only on fishes
+# Let's suppose we only want data from one variable.. 
+# Es. Marta wants to get info only on fishes
+# we have to link the table to the variable we want to have info on by using $ symbol
 summary(ducciotable$fishes)
 
-# histogram
+# I want to have these values as a histogram
 hist(ducciotable$fishes)
 hist(ducciotable$water)
 
