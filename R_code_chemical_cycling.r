@@ -69,3 +69,29 @@ plot(EN$EN_0001, col=cl)
 # let's plot a rgb space, the function in plotRGB
 plotRGB(EN, r=1, g=7, b=13, stretch="lin")     #EN è il nome che abbiamo dato allo stack
 
+#29/11 -DAY 2-
+
+#first of all name the list, bulding the list explaining to the softwer what are the images we want to import
+#function is the list.files + the pattern
+rlist <- list.files(pattern="EN")
+#first remember to recall the library raster!!!
+#then setwd("C:/lab/en/")
+list.files(pattern="EN") #(EN is the part in common among all the images so I use it) #stiamo uscendo da R quindi ci servono le ""
+#then we assign a name to the list
+rlist <- list.files(pattern="EN")
+#lapply(X, FUN, …) x is the list and FUN is the fucntion we want to apply to the list (these are the arguments!)
+list_rast <- lapply(rlist, raster) #list_rast is a random name we choose
+list_rast 
+#poi uniamo tutti i file con STACK function
+ENstack <- stack(list_rast)
+cl <- colorRampPalette(c('red','orange','yellow'))(100) # before plotting chose a set of colors
+plot(ENstack, col=cl)
+#se vogliamo plottare solo la prima immagine
+plot(ENstack$EN_0001, col=cl)
+# to make the difference
+ENdif <- ENstack$EN_0001 - ENstack$EN_0013
+cldif <- colorRampPalette(c('blue','white','red'))(100) # 
+plot(ENdif, col=cldif)
+#how to use code without copypaste it to speed up the work...use the sourse function
+#creo uno script in un file word poi lo salvo nella cartella en in lab #source function 
+source("script_R")
