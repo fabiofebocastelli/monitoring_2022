@@ -6,9 +6,9 @@ library(RStoolbox)
 # no library?
 # install.packages(c("raster","RStoolbox"))
 
-setwd("~/lab/") # Linux
+
 # setwd("C:/lab/")  # windows
-# setwd("/Users/name/lab/") # mac
+
 
 p224r63_2011 <- brick("p224r63_2011_masked.grd")
 
