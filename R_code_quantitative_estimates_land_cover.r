@@ -40,6 +40,8 @@ propagri
 #build a dataframe 
 cover <- c("Forest", "Agriculture") # this is an array!
 prop1992 <- c(0.9040968, 0.09590321)
+#or even better..
+prop1992 <- c(propforest, propagri) #in that way you avoid to write numbers wich is always a GOOD THING WITH R!
 
 proportion1992 <- data.frame(cover, prop1992)
 
@@ -79,3 +81,40 @@ l1992c <- unsuperClass(l1992, nClasse=2)
 plot(l1992c$map)
 #let's compute the frequencies 
 freq(l1992c$map)
+#let's get the proportions...
+# build a dataframe..
+
+# classification of 2006
+# unsupervised classification (again)
+l2006 <- list_rast[[2]]
+l2006c <- unsuperClass(l2006, nClasses=2) # unsuperClass(x, nClasses) 
+l2006c
+#frequencies
+#proportions
+total <- 342726
+propagri2006 <- 164759/total
+propforest2006 <- 177967/total
+#dataframe 
+prop2006 <-c(propforest2006, propforest2006)
+proportion <- data.frame(cover, prop1992, prop2006)
+proportion # and you get:  cover   prop1992  prop2006
+                          #Forest 0.90409679 0.5214508
+                          #Agriculture 0.09590321 0.5214508
+
+#than plot with:
+ggplot(proportion, aes(x=cover, y=prop2006, color=cover)) + geom_bar(stat="identity", fill="white")
+
+#now plot everyting altogether with:
+library(gridExtra) # Provides a number of user-level functions to work with "grid" graphics, notably to arrange multiple grid-based plots on a page, and draw tables.
+#use grid.arrange func
+# first rename the two ggplot
+p2 <- ggplot(proportion, aes(x=cover, y=prop2006, color=cover)) + geom_bar(stat="identity", fill="white")
+p1 <- ggplot(proportion, aes(x=cover, y= prop1992, color= cover)) + geom_bar(stat="identity", fill="white")
+grid.arrange(p1, p2, nrows=1) #and you get both histograms together
+#to change te width of the hist line:
+ggplot(proportion, aes(x=cover, y=prop2006, color=cover)) + geom_bar(stat="identity", fill="white") + ylim(0,1)
+ggplot(proportion, aes(x=cover, y=prop1992, color=cover)) + geom_bar(stat="identity", fill="white") + ylim(0,1)
+
+
+
+
