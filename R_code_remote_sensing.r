@@ -28,7 +28,12 @@ plot(l2011, col=cl) # all of the object which are absorbing blue, green or red (
 plotRGB(l2011, r=3, g=2, b=1, stretch="Lin") # we have 3 channels: red, green and blue that we match with the 3 bands 
                                              
                     
+## day 2 ##
 
+setwd("C:/lab/") #setting the wd for windows..
+
+l2011 <- brick("p224r63_2011_.grd") #assign the function to an object
+l2011 #you habve all the infos, you have several bands (layers). The image is called landsat (7 levels), each leyers we are recording the reflectance of each object
 
 par(mfrow=c(2,2))
 
