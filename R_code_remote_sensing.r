@@ -38,10 +38,10 @@ l2011 #you have all the infos, you have several bands (layers). The image is cal
 
 #let's plot only the green band. what's the name of the band n. 2?  B2_sre (spectral reflectance) ehich is inside the object "l2001"
 plot(l2011$B2_sre) # $ is for linking. plot is the function, inside the () is the argument. Pay attention to the capital letters! 
-#you get an image, but the color are meaningless..
+#you get an image, but the color are meaningless so..
 
 cl <- colorRampPalette(c("black","grey","light grey"))(100) # we can change the colours
-plot(l2011$B2_sre, col=cl) # now we get the new image with the color we chose 8from black to light grey)
+plot(l2011$B2_sre, col=cl) # now we get the new image with the color we chose from black to light grey
 
 # EXERCISE: change the colorRampPalette with dark green, green, and light green, e.g. clg 
 clg <- colorRampPalette(c("dark green","green","light green"))(100)
@@ -63,7 +63,7 @@ par(mfrow=c(2,1))
 plot(l2011$B1_sre, col=clb)
 plot(l2011$B2_sre, col=clg)
 
-## DAY 3##
+## DAY 3 ##
 
 setwd("C:/lab/") 
 #plot only the blue band
@@ -106,7 +106,7 @@ plot(l2011$B4_sre, col= clnir)
 # clean our window with dev.off() function 
  dev.off()
 
-plotRGB(l2011, r=3, g=2, b=1, stretch="Lin")  # natural colours (this is how a human eye see the world), stretch is used to see the colours better
+plotRGB(l2011, r=3, g=2, b=1, stretch="Lin")  # natural colours (this is how a human eye see the world), stretch is used to see the colours better (make the gap wider)
 # we joined each band with the relative colorchannel of RGB 
 # with healthy leafs there is a high reflectance of the NIR wavelenght, we can use that by 
 # we need to remove one band to make room for the NIR band, for ex by switching from bands 1,2,3 to bands, 2,3,4:
@@ -117,27 +117,23 @@ plotRGB(l2011, r=3, g=4, b=2, stretch="Lin")  # false colours
 plotRGB(l2011, r=3, g=2, b=4, stretch="Lin")  # false colours, the yellow parts are spot's where the vegetetion has been cut down.
 # N.B. in monitornig ec. the first step is to have an idea of what is the current status, the second step is the multitemporal analysis (how the status changed during time)
 
+## DAY 4 ##
 
+library(raster)
+setwd("C:/lab/") 
 
+l2011 <- brick("p224r63_2011.grd") 
+plotRGB(l2011, r=4, g=3, b=2, stretch="Lin")  #stretch for a better use of the image
+#there are several way to stretch: Lin, Hist..
+plotRGB(l2011, r=4, g=3, b=2, stretch="Hist") #to enhance the differences among the 2 extremes values
 
-# Exercise: plot the final band, namely the NIR, band number 4
-# red, orange, yellow
-clnir <- colorRampPalette(c('red','orange','yellow'))(100) # 
-plot(p224r63_2011$B4_sre, col=clnir)
+l1988 <- brick("p224r63_1988.grd")  
+l1998  #to see how the file is composed 
 
-# dev.off()
-plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="Lin")
+par(mfrow=c(2,1))
+plotRGB(l1988, r=4, g=3, b=2, stretch="Lin")  
+plotRGB(l2011, r=4, g=3, b=2, stretch="Lin") 
 
-plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
-
-plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="Lin")
-
-plotRGB(p224r63_2011, r=3, g=2, b=4, stretch="Lin")
-
-#
-
-par(mfrow=c(2,2))
-plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="Lin")
-plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
-plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="Lin")
-plotRGB(p224r63_2011, r=3, g=2, b=4, stretch="Lin")
+# Put the NIR in the blue channel
+plotRGB(l1988, r=2, g=3, b=4, stretch="Lin")  
+plotRGB(l2011, r=2, g=3, b=4, stretch="Lin") 
