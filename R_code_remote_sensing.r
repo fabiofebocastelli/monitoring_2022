@@ -63,18 +63,62 @@ par(mfrow=c(2,1))
 plot(l2011$B1_sre, col=clb)
 plot(l2011$B2_sre, col=clg)
 
+## DAY 3##
 
+setwd("C:/lab/") 
+#plot only the blue band
+plot(l2011$B1_sre)
+# plot the blue band using a blue colorRampPalette
+clb <- colorRampPalette(c("dark blue","blue","light blue"))(100)
+plot(l2011$B1_sre, col=clb)
 
+#let's build a multiframe (again as the past lecture)
+par(mfrow=c(1,2)) #(rows, columns)
+
+# ex.:plot the blue and the green besides, with different colorRampPalette
+
+clb <- colorRampPalette(c("dark blue","blue","light blue"))(100)
+plot(l2011$B1_sre, col=clb)
+
+clg <- colorRampPalette(c("dark green","green","light green"))(100)
+plot(l2011$B2_sre, col=clg)
+
+# Exercirse: put the plots one on top of the other
+# invert the number of rows and the number of columns
+
+par(mfrow=c(2,1))
+
+# Exercise: plot the first four bands with two rows and two columns
 par(mfrow=c(2,2))
 
-clb <- colorRampPalette(c('dark blue','blue','light blue'))(100) # 
+clb <- colorRampPalette(c('dark blue','blue','light blue'))(100) 
 plot(p224r63_2011$B1_sre, col=clb)
 
-clg <- colorRampPalette(c('dark green','green','light green'))(100) # 
+clg <- colorRampPalette(c('dark green','green','light green'))(100) 
 plot(p224r63_2011$B2_sre, col=clg)
 
-clr <- colorRampPalette(c('dark red','red','pink'))(100) # 
+clr <- colorRampPalette(c('dark red','red','pink'))(100) 
 plot(p224r63_2011$B3_sre, col=clr)
+
+clnir <- colorRampPalette(c("red","orange","yellow"))(100)
+plot(l2011$B4_sre, col= clnir)
+
+# clean our window with dev.off() function 
+ dev.off()
+
+plotRGB(l2011, r=3, g=2, b=1, stretch="Lin")  # natural colours (this is how a human eye see the world), stretch is used to see the colours better
+# we joined each band with the relative colorchannel of RGB 
+# with healthy leafs there is a high reflectance of the NIR wavelenght, we can use that by 
+# we need to remove one band to make room for the NIR band, for ex by switching from bands 1,2,3 to bands, 2,3,4:
+plotRGB(l2011, r=4, g=3, b=2, stretch="Lin")  # false colours, we have a lot of red because we put on top of the r component of thee RGB the NIR!
+#also we can put the NIR in the green band:
+plotRGB(l2011, r=3, g=4, b=2, stretch="Lin")  # false colours
+#or in the blue component:
+plotRGB(l2011, r=3, g=2, b=4, stretch="Lin")  # false colours, the yellow parts are spot's where the vegetetion has been cut down.
+# N.B. in monitornig ec. the first step is to have an idea of what is the current status, the second step is the multitemporal analysis (how the status changed during time)
+
+
+
 
 # Exercise: plot the final band, namely the NIR, band number 4
 # red, orange, yellow
