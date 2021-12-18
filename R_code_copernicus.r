@@ -33,4 +33,18 @@ ggplot() + geom_raster(NDVI20210110, mapping= aes(x=x, y=y, fill=Normalized.Diff
 ggplot() + geom_raster(NDVI20210110, mapping= aes(x=x, y=y, fill=Normalized.Difference.Vegetation.Index.333M)) + scale_fill_viridis(option="cividis") + 
 ggtitle("cividis palette")
 
+## DAY 3 ##
+
+# importing all the data together with the lapply function. 3 steps: 1-list the files 2- apply the raster function to the list 3- make a stack:
+rlist <- list.files(pattern="c_gls_NDVI300")
+rlist
+list_rast <- lapply(rlist, raster)
+NDVIstack <- stack(list_rast)
+NDVIstack
+
+NDVI2020 <- NDVIstack$Normalized.Difference.Vegetation.Index.333M.1
+NDVI2021 <- NDVIstack$Normalized.Difference.Vegetation.Index.333M.2
+
+#in this case it's not that usefull to stack and than unstack the files.. in fact it's just an exemples to let us know what to do in case of several files!
+
 
