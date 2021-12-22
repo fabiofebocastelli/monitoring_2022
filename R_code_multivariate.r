@@ -26,5 +26,4 @@ ordispider(multivar, type, col=c("black","red","green","blue"), label = T) # to 
                                                                            # seeing the labels
 # that is usefull too see how different organisms are related to each other!!!
 
------switching to the population ecology------
 
