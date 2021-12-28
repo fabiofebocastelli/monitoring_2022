@@ -88,19 +88,25 @@ list.files(pattern="EN") # EN is the part in common between all the images so I 
 rlist <- list.files(pattern="EN")
 rlist # the output is the list of all the files with "EN" in their names in the "en" folder 
 
-#lapply(X, FUN, …) x is the list and FUN is the fucntion we want to apply to the list (these are the arguments!)
-list_rast <- lapply(rlist, raster) #list_rast is a random name we choose
-list_rast 
-#poi uniamo tutti i file con STACK function
+# lapply(X, FUN, …) x is the list and FUN is the function we want to apply to the list (these are the arguments!)
+list_rast <- lapply(rlist, raster) # list_rast is a random name we choose
+list_rast # the output is the list of the infos on each file 
+
+# then we join all the files with stack function, and rename the output:
 ENstack <- stack(list_rast)
+ENstack # this time the output is the infos on all the files together
 cl <- colorRampPalette(c('red','orange','yellow'))(100) # before plotting chose a set of colors
 plot(ENstack, col=cl)
-#se vogliamo plottare solo la prima immagine
+
+# EXERCISE: plot only the first image of the stack
 plot(ENstack$EN_0001, col=cl)
+
 # to make the difference
 ENdif <- ENstack$EN_0001 - ENstack$EN_0013
-cldif <- colorRampPalette(c('blue','white','red'))(100) # 
+cldif <- colorRampPalette(c('blue','white','red'))(100)  
 plot(ENdif, col=cldif)
-#how to use code without copypaste it to speed up the work...use the sourse function
-#creo uno script in un file word poi lo salvo nella cartella en in lab #source function 
+
+# how to use a code without copypasting it to speed up the work? use the source function
+# first you have to create a brand new script in a word file and then saving it in the en folder wich is inside the lab folder 
+# finally, you can get it in this way:
 source("script_R")
