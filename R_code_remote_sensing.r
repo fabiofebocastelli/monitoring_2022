@@ -72,7 +72,7 @@ plot(l2011$B2_sre, col=clg)
 
 setwd("C:/lab/") 
 
-#plot only the blue band
+#plot only the blue band:
 plot(l2011$B1_sre)
 
 # plot the blue band using a blue colorRampPalette
@@ -90,7 +90,7 @@ plot(l2011$B1_sre, col=clb)
 clg <- colorRampPalette(c("dark green","green","light green"))(100)
 plot(l2011$B2_sre, col=clg)
 
-# Exercirse: put the plots one on top of the other
+# EXERCISE: put the plots one on top of the other
 # invert the number of rows and the number of columns
 
 par(mfrow=c(2,1))
@@ -114,15 +114,17 @@ plot(l2011$B4_sre, col= clnir)
  dev.off()
 
 plotRGB(l2011, r=3, g=2, b=1, stretch="Lin")  # natural colours (this is how a human eye see the world), stretch is used to see the colours better (make the gap wider)
-# we joined each band with the relative colorchannel of RGB 
-# with healthy leafs there is a high reflectance of the NIR wavelenght, we can use that by 
+# we matched each band (3, 2, 1) with the relative colorchannel of RGB (red, green, blue)
+# but with healthy leafs there is a high reflectance of the NIR wavelenght. Let's use that to check the health of the vegetation cover in our image!
+
 # we need to remove one band to make room for the NIR band, for ex by switching from bands 1,2,3 to bands, 2,3,4:
-plotRGB(l2011, r=4, g=3, b=2, stretch="Lin")  # false colours, we have a lot of red because we put on top of the r component of thee RGB the NIR!
-#also we can put the NIR in the green band:
+plotRGB(l2011, r=4, g=3, b=2, stretch="Lin")  # false colours, here we have a lot of red because we put on top of the red (r) component of the RGB the NIR (n.4)!
+# also we can put the NIR in the green component:
 plotRGB(l2011, r=3, g=4, b=2, stretch="Lin")  # false colours
-#or in the blue component:
-plotRGB(l2011, r=3, g=2, b=4, stretch="Lin")  # false colours, the yellow parts are spot's where the vegetetion has been cut down.
-# N.B. in monitornig ec. the first step is to have an idea of what is the current status, the second step is the multitemporal analysis (how the status changed during time)
+# or in the blue component:
+plotRGB(l2011, r=3, g=2, b=4, stretch="Lin")  # false colours, the yellow parts are spot's where vegetetion has been cut down.
+# N.B. in ecosystems monitoring the first step is to have an idea of what is the current status, ..
+# ..the second step is the multitemporal analysis (how the status changed during time)
 
 ## DAY 4 ##
 
@@ -130,16 +132,17 @@ library(raster)
 setwd("C:/lab/") 
 
 l2011 <- brick("p224r63_2011.grd") 
-plotRGB(l2011, r=4, g=3, b=2, stretch="Lin")  #stretch for a better use of the image
-#there are several way to stretch: Lin, Hist..
-plotRGB(l2011, r=4, g=3, b=2, stretch="Hist") #to enhance the differences among the 2 extremes values
+plotRGB(l2011, r=4, g=3, b=2, stretch="Lin")  # stretch for a better use of the image
+# there are several way to stretch: Lin, Hist, etc..
+plotRGB(l2011, r=4, g=3, b=2, stretch="Hist") # to enhance the differences among the 2 extremes values
 
 l1988 <- brick("p224r63_1988.grd")  
-l1998  #to see how the file is composed 
+l1998  # to see how the file is composed 
 
 par(mfrow=c(2,1))
 plotRGB(l1988, r=4, g=3, b=2, stretch="Lin")  
 plotRGB(l2011, r=4, g=3, b=2, stretch="Lin") 
+# the output is the two images one beside the other
 
 # Put the NIR in the blue channel
 plotRGB(l1988, r=2, g=3, b=4, stretch="Lin")  
