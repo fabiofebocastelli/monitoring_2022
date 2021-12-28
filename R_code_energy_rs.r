@@ -1,46 +1,56 @@
 # R code for estimating energy in ecosystems
 
-# set working directory
-#serve per legare una cartella ad R da cui recuperare i dati 
 #https://earthobservatory.nasa.gov/images/35891/deforestation-in-mato-grosso-brazil
 
-#  setwd("C:/lab/")  # windows
-#how to updat data to r?
-#create a rasterbrick 
-l1992 <- brick("defor1_.jpg") #image of 1992 importing
-#install.packages("rgdal")
-#library(rgdal)
-l1992 <- brick("defor1_.png") # image of 1992
-plotRGB(l1992, r=1, g=2, b=3, stretch="Lin")
-#se voglio cambiare il colore cambio ad esempio g=1 o b=1
-#lezione 19-11
-#scrivo l1992 e vengono fuori i dati
-#plotRGB(l1992, r=1, g=2, b=3, stretch="Lin") prima banda infrarossi seconda banda rossi terza banda verdi
-#linear stretching ... esce la figura colorata..
-#si vede la situazione del mato grosso nel 1992
-#ora carichiamo l'immagine più recente del 2006:
+# set the working directory
+setwd("C:/lab/")  
+
+# let's install a new package:
+install.packages("rgdal")
+library(rgdal)
+
+# how to import data in R? create a rasterbrick: 
+l1992 <- brick("defor1_.jpg") # or, if it doesn't work:
+l1992 <- brick("defor1_.png") # image of 1992 imported
+l1992 # and you get all the infos about the file 
+
+# the name of the three bands are: defor1_.1, defor1_.2, defor1_.3
+
+plotRGB(l1992, r=1, g=2, b=3, stretch="Lin") # if you would to change colors: g=1 o b=1 (for instance)
+plotRGB(l1992, r=2, g=3, b=1, stretch="Lin")
+
+## DAY 2 ##
+
+l1992
+plotRGB(l1992, r=1, g=2, b=3, stretch="Lin") # you get the image of the situation in 1992 
+
+# now let's import the satellite image file of the same area in 2006:
 l2006 <- brick("defor2_.png")
 l2006
-plotRGB(l2006, r=1, g=2, b=3, stretch="Lin") #plottiamo come prima ma con l'immagine 2006
-#let's look at the Rio Pixoto: the amount of solid inside the river is smaller-> is blue and not white as the 1992 pic. If it was black that'd mean is pure water.
-#vogliamo mettere una immagine sopra l'altra usiamo codice "par" creamo 2 righe e una colonna
+# plot the new image:
+plotRGB(l2006, r=1, g=2, b=3, stretch="Lin") 
+# let's take a look at the Rio Pixoto: the amount of debris inside the river is smaller -> is blue and not white as the 1992 pic..
+# ..If it was black that'd mean it's pure water
+
+# to get one image above the other use par function with 2 rows and one column
 par(mfrow=c(2,1))
 plotRGB(l1992, r=1, g=2, b=3, stretch="Lin")
-plotRGB(l2006, r=1, g=2, b=3, stretch="Lin")
-#vediamo qualcosa che prima era nascosto... 
-#let's calculate energy in 1992
-#i nomi dei layers contenenti le differenti reflettanze di colori sono chiamati defor1_.1, defor1_.2, defor1_.3 
-dvi1992 <- l1992$defor1_.1-l1992$defor1_.2
-cl <- colorRampPalette(c('darkblue','yellow','red','black'))(100) #per scegliere i colori 
-plot(dvi1992, col=cl)
-#vogliamo vedere le due immagini sovrapposte, per chiudere l'immagine prevedente "dev.off" close the plotting device
-dev.off()
-dvi1992 <- l1992$defor1_.1-l1992$defor1_.2
-cl <- colorRampPalette(c('darkblue','yellow','red','black'))(100) #per scegliere i colori 
-plot(dvi1992, col=cl)
-#esce fuori l'immagine con il DVI 1992
+plotRGB(l2006, r=1, g=2, b=3, stretch="Lin") # very usefull for graphic comparison!
 
-#calculate for 2006 
+# now let's calculate energy in 1992
+
+# "dev.off" to close the plotting device
+dev.off()
+
+# the layers with the different colors reflectance (NIR, red, green) are called respectively defor1_.1, defor1_.2, defor1_.3 
+# N.B. healthy plants reflect little red light and have high reflectance in the near-infrared
+dvi1992 <- l1992$defor1_.1-l1992$defor1_.2 # N.B. DVI index is a measure of the difference between near-infrared light and red light reflected, healthy leaf
+# differences are computed for each pair of pixels of the images
+cl <- colorRampPalette(c('darkblue','yellow','red','black'))(100) 
+plot(dvi1992, col=cl) # and you get the image with the DVI in 1992
+# red color stands for high DVI levels, yellow color stands for intermediate and low DVI levels
+
+# calculate energy in 2006 
 dev.off()
 dvi2006 <- l2006$defor2_.1-l2006$defor2_.2
 cl <- colorRampPalette(c('darkblue','yellow','red','black'))(100) #per scegliere i colori 
