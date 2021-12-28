@@ -58,11 +58,11 @@ plot(dvi2006, col=cl) # there are much more yellow areas! :_C
 
 # Now, in order to sow the evolution of DVI across time, let's make the difference between the two years considered:
 dvidif <- dvi1992 - dvi2006 # and then assign an object to the result in order to use it in further analysis:
-# and choose a new colorramppallet, for instance:
+# and choose a new colorRampPallet, for instance:
 cld <- colorRampPalette(c('blue','white','red'))(100)
 # at last, plot the results: 
 cld <- colorRampPalette(c('blue','white','red'))(100)
-plot(dvidif, col=cld)
+plot(dvidif, col=cld) # the red color reveal the areas where the DVI difference is high, that is where there has been a big loss of energy
 
 # final plot: original images, DVIs, final DVI difference by using par function with 3 rows and 2 columns:
 par(mfrow=c(3,2))
