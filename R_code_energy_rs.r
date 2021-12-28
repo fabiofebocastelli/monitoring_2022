@@ -54,26 +54,25 @@ plot(dvi1992, col=cl) # and you get the image with the DVI in 1992
 dev.off()
 dvi2006 <- l2006$defor2_.1-l2006$defor2_.2
 cl <- colorRampPalette(c('darkblue','yellow','red','black'))(100) #per scegliere i colori 
-plot(dvi2006, col=cl)
+plot(dvi2006, col=cl) # there are much more yellow areas! :_C
 
-#monitoriamo la situazione non solo nel momento corrente ma anche lungo il tempo
-#facciamo la differenza tra i due anni presi come riferimento 1992 e 2006
-dvidif <- dvi1992 - dvi2006
-#associamo le differenti funzioni ad oggetti, cosi da poterli usare in analisi successive...
-#scegliamo una nuova colorramppallet cld <- colorRampPalette(c('blue','white','red'))(100)
-#plot the results 
+# Now, in order to sow the evolution of DVI across time, let's make the difference between the two years considered:
+dvidif <- dvi1992 - dvi2006 # and then assign an object to the result in order to use it in further analysis:
+# and choose a new colorramppallet, for instance:
+cld <- colorRampPalette(c('blue','white','red'))(100)
+# at last, plot the results: 
 cld <- colorRampPalette(c('blue','white','red'))(100)
 plot(dvidif, col=cld)
 
-#final plot: original images, DVIs, final DVI difference with "par" function 
-#3 row and 2 columns
+# final plot: original images, DVIs, final DVI difference by using par function with 3 rows and 2 columns:
 par(mfrow=c(3,2))
 plotRGB(l1992, r=1, g=2, b=3, stretch="Lin")
 plotRGB(l2006, r=1, g=2, b=3, stretch="Lin")
 plot(dvi1992, col=cl)
 plot(dvi2006, col=cl)
 plot(dvidif, col=cld)
-#per farne un pdf 
+
+# to get a pdf file use pdf function:
 pdf("energy.pdf")
 par(mfrow=c(3,2))
 plotRGB(l1992, r=1, g=2, b=3, stretch="Lin")
@@ -81,4 +80,13 @@ plotRGB(l2006, r=1, g=2, b=3, stretch="Lin")
 plot(dvi1992, col=cl)
 plot(dvi2006, col=cl)
 plot(dvidif, col=cld)
-dev.off() #needed to close the pdf file.
+dev.off() # needed to close the pdf file!
+
+# or also:
+
+pdf("dvi.pdf")
+par(mfrow=c(3,1))
+plot(dvi1992, col=cl)
+plot(dvi2006, col=cl)
+plot(dvidif, col=cld)
+dev.off()
