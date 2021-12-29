@@ -31,45 +31,46 @@ ggplot() + geom_raster(NDVI20210110, mapping= aes(x=x, y=y, fill=Normalized.Diff
 
 # ggplot with viridis:
 ggplot() + geom_raster(NDVI20210110, mapping= aes(x=x, y=y, fill=Normalized.Difference.Vegetation.Index.333M)) + scale_fill_viridis(option="cividis") 
-#cividis is the legend we choose
+# "cividis" is the name of the legend we choose
 ggplot() + geom_raster(NDVI20210110, mapping= aes(x=x, y=y, fill=Normalized.Difference.Vegetation.Index.333M)) + scale_fill_viridis(option="cividis") + 
 ggtitle("cividis palette") # and you also get the title in the plot
 
 ## DAY 3 ##
 
 # importing all the data together with the lapply function. 3 steps: 1-list the files, 2-apply the raster function to the list, 3-make a stack:
+# 1)
 rlist <- list.files(pattern="c_gls_NDVI300")
 rlist
+# 2)
 list_rast <- lapply(rlist, raster)
+# 3)
 NDVIstack <- stack(list_rast)
 NDVIstack
 
 NDVI2020 <- NDVIstack$Normalized.Difference.Vegetation.Index.333M.1
 NDVI2021 <- NDVIstack$Normalized.Difference.Vegetation.Index.333M.2
 
-# in this case it was not that usefull to stack and than unstack the files.. in fact it's just an exemples to let us know what to do in case of several files (images)!
+# in this case it was not that usefull to stack and then unstack the files.. in fact it's just an exemples to let us know what to do in case of several files (images)!
 
 # patchwork packages:
 
 library(patchwork)
 
+# now let's patchwork them together, first of all assign a name to each plot:
 p1 <- ggplot() + geom_raster(NDVI2020, mapping= aes(x=x, y=y, fill=Normalized.Difference.Vegetation.Index.333M.1)) + scale_fill_viridis() + ggtitle("NDVI in 2020")
 
 p2 <- ggplot() + geom_raster(NDVI2021, mapping= aes(x=x, y=y, fill=Normalized.Difference.Vegetation.Index.333M.2)) + scale_fill_viridis() + ggtitle("NDVI in 2021")
-
-# now let's patchwork them together, first of all assign a name to each plot:
-
+# and then:
 p1/p2
 
 # to ZOOM on a certain part of the image, use the crop function (coordinates):
 # for instance: longitude from 10 to 30, latitude from 35 to 55
- 
 ext <- c(10, 30, 35, 55)
 NDVI2020_cropped <- crop(NDVI2020, ext)
 NDVI2021_cropped <- crop(NDVI2021, ext)
 
 p1 <- ggplot() + geom_raster(NDVI2020_cropped, mapping= aes(x=x, y=y, fill=Normalized.Difference.Vegetation.Index.333M.1)) + scale_fill_viridis() + ggtitle("NDVI in 2020")
 p2 <- ggplot() + geom_raster(NDVI2021_cropped, mapping= aes(x=x, y=y, fill=Normalized.Difference.Vegetation.Index.333M.2)) + scale_fill_viridis() + ggtitle("NDVI in 2021")
-p1/p2
+p1/p2 # and you get the patchwork with the cropped images
 
 
