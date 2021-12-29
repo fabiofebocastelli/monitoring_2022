@@ -1,87 +1,88 @@
 library(raster)
 setwd("C:/lab/")
-# brick
+
 # first: list the files available 
-rlist <- list.files(pattern="defor") #defor is the common part of the two files
-# con rlist #esce fuori "defor1_.png" "defor2_.png"
+rlist <- list.files(pattern="defor") # "defor" is the common part of the two files we want to take from lab folder
+rlist # the output is "defor1_.png" "defor2_.png"
 
-#use lapply function lapply(X, FUN, …)
-# second: lapply, apply a function to a list
-#the X is the name of the list wich is rlist, and the FUn is the brick function
-listrast <- lapply(rlist, brick) #listrast is a name, you can choose any other if u want
-listrast
-#we not make a stack since we have two different images we want to treat separeted
-plot(listrast[[1]])
+# second: use lapply function (apply a function to a list): lapply(X, FUN, …)
+# the X is the name of the list wich in this case is rlist, and the FUN is the the function to be applied to each element of X (brick function in this case)
+listrast <- lapply(rlist, brick) # listrast is a name, you can choose any other if you like
+listrast # and you get all the infos on the two files source
+# we don't make a stack since we have two different images we want to treat separately
+plot(listrast[[1]]) # the output is the 3 images of defor1_.1, defor1_.2, defor1_.3 
 
-# defor: NIR 1, RED 2, GREEN 3
-plotRGB(listrast[[1]], r=1, g=2, b=3, stretch="lin")
-#we can re-assign a name 
+# the 3 defor layers correspond to the 3 different wavelenght reflectances respectively : NIR 1, RED 2, GREEN 3
+plotRGB(listrast[[1]], r=1, g=2, b=3, stretch="lin") # the output is just one image of defor1_.png file with its 3 layers (bands) overlapped
+# you can re-assign a name 
 l1992 <- listrast[[1]]
-#so we can just do 
+# so that we can just do:
 plotRGB(l1992, r=1, g=2, b=3, stretch="lin")
+# now the same with the second file:
 l2006 <- listrast[[2]]
 plotRGB(l2006, r=1, g=2, b=3, stretch="lin")
 
-#unsupervised classification 
-library(RStoolbox) # classification
-l1992c <- unsuperClass(l1992, nClasse=2)
-plot(l1992c$map)
-# value 1 = is forest and value 2= water and agriculture
-#new let's check the frequencies of the pixels.. how many pixels inside my maps are forest? and how many are field crops?
+# if you want to estime the change in time in terms of amount of forest which has been lost between 1992 and 2006:
+# unsupervised classification to make R know where is forest and where is not. For instance to make R able to distinguish between forests and field crop
+library(RStoolbox) # for classification
+# make use of unsuperClass function
+l1992c <- unsuperClass(l1992, nClasses=2) # nClasses is an integer, it's the number of classes.
+l1992c # and you get the new infos summary: now the values are just either 1 or 2
+plot(l1992c$map) # forest is linked to value 1 and field crops and water to value 2 (green color)
+
+# now let's check the frequencies of the pixels.. how many pixels inside my maps are forest? and how many are field crops?
 # use freq function 
-freq(l1992c$map)
-total <-  341292 #these are the total amount of pixels in l1992 file
+freq(l1992c$map) # and you get the count
+total <-  341292 # these are the total amount of pixels in l1992 file
 # we want to check the proportion..
 propforest <-  308561/total
 propagri <- 32731/total
-propforest
-propagri
+propforest # [1] 0.9040968
+propagri # [1] 0.09590321 
+# in 1992 the 90% of the evaluated area was covered by forest
 
-#build a dataframe 
-cover <- c("Forest", "Agriculture") # this is an array!
+# now let's build a dataframe with those values:
+cover <- c("Forest", "Agriculture") # N.B. this is an array!
 prop1992 <- c(0.9040968, 0.09590321)
-#or even better..
-prop1992 <- c(propforest, propagri) #in that way you avoid to write numbers wich is always a GOOD THING WITH R!
+# or even better:
+prop1992 <- c(propforest, propagri) # in that way you avoid to write numbers which is always a GOOD THING with R!
 
 proportion1992 <- data.frame(cover, prop1992)
+proportion1992 # and you get the table (data frame)
 
-#plot the data with ggplot2
+# now let's plot the data with ggplot2
 library(ggplot2)
 
 ggplot(proportion1992, aes(x=cover, y= prop1992, color= cover))
-#we want to have an histogram: geom_bar function 
-ggplot(proportion1992, aes(x=cover, y= prop1992, color= cover)) + geom_bar(stat="identity", fill="white") #identity means we want to use the values as they are
-#fill is for chosing the colour inside the bars of the histogram
+# we want to have an histogram: geom_bar function 
+ggplot(proportion1992, aes(x=cover, y= prop1992, color= cover)) + geom_bar(stat="identity", fill="white") # "identity" means we want to use the values as they are
+# fill is for chosing the colour inside the bars of the histogram
 
- ## day 2 ##
-#mi si è bloccato il pc..
-recall all the past things .
+## DAY 2 ##
+
+# recall all the previous things 
 library(raster)
 library(RStoolbox) 
 library(ggplot2)
+setwd("C:/lab/") 
 
-# setwd("C:/lab/") # Windows
-
-# 1 list the files available
-
+# list the files available
 rlist <- list.files(pattern="defor")
-
 rlist
 list_rast <- lapply(rlist, brick) # lapply(x, FUN)
-
 list_rast
 l1992 <- list_rast[[1]]
 plotRGB(l1992, r=1, g=2, b=3, stretch="lin")
 
-# unsupervised classification:  unsuperClass function 
-#we shift from a rasterbrick to a single raster layer
+# unsupervised classification: unsuperClass function 
+# we shift from a rasterbrick to a single raster layer
 l1992c <- unsuperClass(l1992, nClasse=2)
 # no more continuous values (0-255) but only 2 values (1 or 2)
-#let's plot the map
+# let's plot the map
 plot(l1992c$map)
-#let's compute the frequencies 
+# let's compute the frequencies 
 freq(l1992c$map)
-#let's get the proportions...
+# let's get the proportions...
 # build a dataframe..
 
 # classification of 2006
@@ -89,35 +90,35 @@ freq(l1992c$map)
 l2006 <- list_rast[[2]]
 l2006c <- unsuperClass(l2006, nClasses=2) # unsuperClass(x, nClasses) 
 l2006c
-#frequencies
-#proportions
+# frequencies
+# proportions
 total <- 342726
 propagri2006 <- 164759/total
 propforest2006 <- 177967/total
-#dataframe 
+# dataframe 
 prop2006 <-c(propforest2006, propforest2006)
 proportion <- data.frame(cover, prop1992, prop2006)
 proportion # and you get:  cover   prop1992  prop2006
                           #Forest 0.90409679 0.5214508
-                          #Agriculture 0.09590321 0.5214508
+                          #Agric  0.09590321 0.5214508
 
-#than plot with:
+# than plot with ggplot:
 ggplot(proportion, aes(x=cover, y=prop2006, color=cover)) + geom_bar(stat="identity", fill="white")
 
-#now plot everyting altogether with:
-library(gridExtra) # Provides a number of user-level functions to work with "grid" graphics, notably to arrange multiple grid-based plots on a page, and draw tables.
-#use grid.arrange func
-# first rename the two ggplot
+# now plot everyting altogether with:
+library(gridExtra) # Provides a number of user-level functions to work with "grid" graphics, notably to arrange multiple grid-based plots on a page, and draw tables
+# let's make use of grid.arrange function
+# first rename the two ggplot:
 p2 <- ggplot(proportion, aes(x=cover, y=prop2006, color=cover)) + geom_bar(stat="identity", fill="white")
 p1 <- ggplot(proportion, aes(x=cover, y= prop1992, color= cover)) + geom_bar(stat="identity", fill="white")
-grid.arrange(p1, p2, nrow=1) #and you get both histograms together
-#to change te width of the hist line:
+grid.arrange(p1, p2, nrow=1) # and you get both histograms together
+# to change te width of the hist line:
 ggplot(proportion, aes(x=cover, y=prop2006, color=cover)) + geom_bar(stat="identity", fill="white") + ylim(0,1)
 ggplot(proportion, aes(x=cover, y=prop1992, color=cover)) + geom_bar(stat="identity", fill="white") + ylim(0,1)
 
 ## DAY3 ##
 
-#plot two graphs with patchwork package 
+# plot two graphs with patchwork package 
 p1+p2
 p1/p2 # to have one plot on top of the other
 
