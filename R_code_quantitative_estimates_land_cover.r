@@ -111,6 +111,7 @@ library(gridExtra) # Provides a number of user-level functions to work with "gri
 # first rename the two ggplot:
 p2 <- ggplot(proportion, aes(x=cover, y=prop2006, color=cover)) + geom_bar(stat="identity", fill="white")
 p1 <- ggplot(proportion, aes(x=cover, y= prop1992, color= cover)) + geom_bar(stat="identity", fill="white")
+# now, the easiest approach to assemble multiple plots on a page is to use the grid.arrange() function from the gridExtra package, so:
 grid.arrange(p1, p2, nrow=1) # and you get both histograms together
 # to change te width of the hist line:
 ggplot(proportion, aes(x=cover, y=prop2006, color=cover)) + geom_bar(stat="identity", fill="white") + ylim(0,1)
@@ -118,29 +119,31 @@ ggplot(proportion, aes(x=cover, y=prop1992, color=cover)) + geom_bar(stat="ident
 
 ## DAY3 ##
 
+library(patchwork) # The goal of patchwork is to make it easier to combine separate ggplots into the same graphic
+
 # plot two graphs with patchwork package 
 p1+p2
 p1/p2 # to have one plot on top of the other
 
-#patchwork is working also with raster data, but they should be plotted with ??
-#instead of useing plotRGB we can use ggRGB:
+# patchwork is working also with raster data
+# instead of using plotRGB we can use ggRGB:
 plotRGB(l1992, r=1, g=2, b=3, stretch="Lin")
-#or
-ggRGB(l1992, r=1, g=2, b=3) # we also have coordinates
-#let's play with "stretch"
+# or
+ggRGB(l1992, r=1, g=2, b=3) # with this one you also have coordinates
+# let's play a bit with "stretch" 
 ggRGB(l1992, r=1, g=2, b=3, stretch="lin") # no capital letter for "lin" here
 ggRGB(l1992, r=1, g=2, b=3, stretch="hist") # N.B. "hist" in lower case again..
-#you can see more things: e.g. the lines of the scanner of the satallite
-ggRGB(l1992, r=1, g=2, b=3, stretch="sqrt") # you are compacting the data, usefull to remove extreme data
+# you can see more things: e.g. the lines of the scanner of the satallite
+ggRGB(l1992, r=1, g=2, b=3, stretch="sqrt") # here you are compacting the data, usefull to remove extreme data
 ggRGB(l1992, r=1, g=2, b=3, stretch="log")
 
-#patchwork
+# and now let's do a patchwork:
 gp1 <- ggRGB(l1992, r=1, g=2, b=3, stretch="lin") 
 gp2 <- ggRGB(l1992, r=1, g=2, b=3, stretch="hist")
 gp3 <- ggRGB(l1992, r=1, g=2, b=3, stretch="sqrt")
 gp4 <- ggRGB(l1992, r=1, g=2, b=3, stretch="log")
 
-gp1 + gp2 + gp3 + gp4 # and u get 4 grpahs together
+gp1 + gp2 + gp3 + gp4 # and you get 4 graphs together
 
 # multitemporal patchwork 
 
@@ -148,7 +151,7 @@ gp1 <- ggRGB(l1992, r=1, g=2, b=3)
 gp5 <- ggRGB(l2006, r=1, g=2, b=3)
  
 gp1 + gp5
-#or
+# or
 gp1/gp5
 
 
