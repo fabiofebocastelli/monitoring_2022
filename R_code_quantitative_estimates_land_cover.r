@@ -6,7 +6,7 @@ rlist <- list.files(pattern="defor") # "defor" is the common part of the two fil
 rlist # the output is "defor1_.png" "defor2_.png"
 
 # second: use lapply function (apply a function to a list): lapply(X, FUN, …)
-# the X is the name of the list wich in this case is rlist, and the FUN is the the function to be applied to each element of X (brick function in this case)
+# the X is the name of the list which in this case is rlist, and the FUN is the the function to be applied to each element of X (brick function in this case)
 listrast <- lapply(rlist, brick) # listrast is a name, you can choose any other if you like
 listrast # and you get all the infos on the two files source
 # we don't make a stack since we have two different images we want to treat separately
