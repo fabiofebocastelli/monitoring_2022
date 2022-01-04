@@ -95,7 +95,7 @@ list_rast # the output is the list of the infos on each file
 # then we join all the files with stack function, and rename the output:
 ENstack <- stack(list_rast)
 ENstack # this time the output is the infos on all the files together
-cl <- colorRampPalette(c('red','orange','yellow'))(100) # before plotting chose a set of colors
+cl <- colorRampPalette(c('red','orange','yellow'))(100) # before plotting choose a set of colors
 plot(ENstack, col=cl)
 
 # EXERCISE: plot only the first image of the stack
