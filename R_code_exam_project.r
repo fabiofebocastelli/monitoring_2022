@@ -1,9 +1,9 @@
-### tentativo 1 con il CORINE_LAND_COVER 
+### Corine Land Cover Accounting Layers ###
 
 
 > setwd("C:/lab/clc_ al/")
-> clc90 <- raster("CLC2000ACC_V2018_20.tif.ovr") 
-> clc90
+> clc00 <- raster("CLC2000ACC_V2018_20.tif.ovr") 
+> clc00
 class      : RasterLayer 
 dimensions : 23000, 32500, 747500000  (nrow, ncol, ncell)
 resolution : 1, 1  (x, y)
@@ -13,13 +13,10 @@ source     : CLC2000ACC_V2018_20.tif.ovr
 names      : CLC2000ACC_V2018_20.tif 
 values     : -32768, 32767  (min, max)
 
-> plot(clc90)
-> 
-> plot(clc90)
-> plot(clc90, xlim=c(15000, 2200), ylim=c(2500,10000)
-+ )
-Errore in .plotraster2(x, col = col, maxpixels = maxpixels, add = add,  : 
-  invalid xlim
+> plot(clc00)
+
+> plot(clc00)
+
 > plot(clc90, xlim=c(15000, 22000), ylim=c(2500,10000))
 > plot(clc90, xlim=c(15000, 21000), ylim=c(2500,9000))
 > plot(clc90, xlim=c(17000, 19000), ylim=c(5000,7000))
@@ -51,10 +48,8 @@ Errore: oggetto 'clc' non trovato
 > plot(forest_cover00)
 
 
-> clc = raster("./CLC2000ACC_V2018_20.tif"
-+ )
-> clcl
-Errore: oggetto 'clcl' non trovato
+> clc = raster("./CLC2000ACC_V2018_20.tif")
+
 > clc
 class      : RasterLayer 
 dimensions : 46000, 65000, 2.99e+09  (nrow, ncol, ncell)
@@ -78,8 +73,6 @@ values     : -32768, 32767  (min, max)
 
 > clc00 <- raster(""CLC2000ACC_V2018_20.tif)
 
-> 
-
 > clc00 <- raster("CLC2000ACC_V2018_20.tif")
 > clc00
 class      : RasterLayer 
@@ -90,6 +83,8 @@ crs        : +proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS
 source     : CLC2000ACC_V2018_20.tif 
 names      : CLC2000ACC_V2018_20 
 values     : -32768, 32767  (min, max)
+
+## now use a different file with values from 111 to 999
 
 > clc00 <- raster("CLC2000ACC_V2018_20.tif")
 > clc00
@@ -108,4 +103,16 @@ attributes :
 
 > plot(clc00)
 > forest_cover00 <- clc00 == 312
+plot(forest_cover00)
+
+levels(clc00) # You get the value metadata
+
+> setwd("C:/lab/clc_ al/clc00_18/")
+
+rlist <- list.files(pattern="CLC")
+import <- lapply(rlist,raster)
+
+
+
+
 
