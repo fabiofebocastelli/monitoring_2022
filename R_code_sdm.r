@@ -66,3 +66,36 @@ points(presences, pch=19)
 plot(preds$precipitation, col=cl)
 points(presences, pch=19)
 
+## DAY 2 ##
+
+# let's recall how to import directly a source script:
+
+setwd("C:/lab/")
+
+# make use of source function:
+source("R_code_source_sdm.r") # inside the quotes the name of the source script file
+# to do the model we need to explain to the software what are the data. Species data are also colled training data. 
+
+datasdm <- sdmData(train=species, predictors=preds) # N.B. predictors are raster data 
+datasdm 
+m1 <- sdm(Occurrence ~ elevation + precipitation + temperature + vegetation, data=datasdm, methods = "glm") # glm= generalized linear model (with normally distributed variables)
+m1 # and you get the summary of the statistics of the model
+
+# now let's make the final prediction:
+
+p1 <- predict(m1, newdata=preds) #N.B. p1 is a rasterlayer
+# let's plot it
+plot(p1, col=cl)
+points(species[species$Occurrence == 1,], pch=16) # to add the presences to the plot
+# you can confirm the validity of the distribution possibility model with the actual occurencies
+
+# add to the stack:
+s1 <- stack(preds,p1)
+plot(s1, col=cl) # and you get the models and the prediction together
+
+# to change names in the plot of the stack:
+# choose a vector of names for the stack, looking at the previous graph, which are:
+names(s1) <- c('elevation', 'precipitation', 'temperature', 'vegetation', 'model')
+# and then replot:
+plot(s1, col=cl)
+
