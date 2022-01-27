@@ -1,5 +1,13 @@
 ### Corine Land Cover Accounting Layers ###
 
+library(raster) 
+library(viridis) 
+library(RStoolbox) 
+library(ggplot2) 
+library(patchwork) 
+library(rgdal) 
+library(vegan)
+library(mapview) 
 
 > setwd("C:/lab/clc_ al/")
 > clc00 <- raster("CLC2000ACC_V2018_20.tif.ovr") 
