@@ -121,6 +121,7 @@ rlist <- list.files(pattern="CLC")
 import <- lapply(rlist,raster)
 
 
+install.packages("raster", repos="https://cran.r-project.org/web/packages/raster/index.html", dependencies=TRUE)
 
-
-
+Errore: caricamento pacchetto o namespace fallito per ‘raster’ in loadNamespace(i, c(lib.loc, .libPaths()), versionCheck = vI[[i]]):
+ namespace ‘terra’ 1.4-22 già caricato, ma >= 1.5.12 è richiesto
