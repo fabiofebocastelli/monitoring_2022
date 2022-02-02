@@ -50,5 +50,5 @@ crs(crop_ita00) <- "+proj=longlat +datum=WGS84 +no_defs"
 crop_ita00forest <- crop(clc_forest00, crop_ita00)
 
 # e mi esce:
-Errore in .local(x, y, ...) : extents do not overlap 
+Errore in .local(x, y, ...) : extents do not overlap  
 
