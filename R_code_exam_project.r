@@ -41,14 +41,14 @@ values     : 0, 1  (min, max)
 
 # quanti sono i pixel in cui values=1 is True?
 # prendo consigli da: https://gis.stackexchange.com/questions/422711/how-to-get-the-number-of-pixel-with-a-given-value-from-a-rasterlayer-in-r/422713#422713
-freq(clc_forest00) # troppo pesante non va..
+freq(clc_forest00) # file troppo pesante, non va..
+# allora provo:
 sum(values(clc_forest00), na.rm=TRUE)
-# è troppo pesante, cerco di croppare ottenendo solo l'italia, decido di lavorare solo su questo pezzo di file:
+# è sempre troppo pesante, cerco di croppare ottenendo solo l'italia e decido di lavorare solo su questo pezzo di file:
 # prendo consigli da:  https://gis.stackexchange.com/questions/229356/crop-a-raster-file-in-r
 crop_ita00 <- as(extent(6.37, 18.31, 35.29, 47.5), 'SpatialPolygons') # estremi dell'italia 
 crs(crop_ita00) <- "+proj=longlat +datum=WGS84 +no_defs"
 crop_ita00forest <- crop(clc_forest00, crop_ita00)
-
-# e mi esce:
+# ma mi esce:
 Errore in .local(x, y, ...) : extents do not overlap  
-
+# perchè?
