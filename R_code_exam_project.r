@@ -1,10 +1,16 @@
 ### Corine Land Cover Accounting Layers ###
 
+install.packages('terra', repos='https://rspatial.r-universe.dev')
+install.packages('raster')
+install.packages('RStoolbox')
+install.packages('ggplot2')
+install.packages('rgdal')
+
 library(raster) 
 library(RStoolbox) 
 library(ggplot2) 
 library(rgdal) 
-library(mapview) 
+# interessante : library(mapview) 
 
 setwd("C:/lab/clc_ al/")
 clc00 <- raster("CLC2000ACC_V2018_20.tif")
