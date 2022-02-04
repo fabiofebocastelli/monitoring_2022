@@ -129,3 +129,16 @@ eu_coastline <- raster("Europe_coastline_poly.shp")
 eu_coastline <- raster("HYP_50M_SR_W.tif")
 #non riesco a caricare questi file 
 
+
+
+
+
+### TENTATIVI RANDOM ###
+plotRGB(fdiff, r=3, g=2, b=1, stretch="Lin") # non si può usare
+
+#provo a mettere la coastline:
+install.packages("rnaturalearthdata")
+library("rnaturalearthdata")
+install.packages("devtools") 
+devtools::install_github("ropensci/rnaturalearthhires")
+library("rnaturalearthhires")
