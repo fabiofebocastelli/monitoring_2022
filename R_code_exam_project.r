@@ -142,3 +142,11 @@ library("rnaturalearthdata")
 install.packages("devtools") 
 devtools::install_github("ropensci/rnaturalearthhires")
 library("rnaturalearthhires")
+
+if (requireNamespace("rnaturalearthdata")) {
+sldf_coast <- ne_coastline()
+if (require(sp)) {
+plot(sldf_coast)
+}
+}
+
