@@ -123,9 +123,9 @@ cl <- colorRampPalette(c("red","white","blue"))(100)
 plot(diff_north, col=cl)
 
 
-#provo ad importare limmagine con i confine dell europa:
+# provo ad importare limmagine con i confine dell europa:
 eu_coastline <- raster("Europe_coastline.shp") # non va
 eu_coastline <- raster("Europe_coastline_poly.shp")
 eu_coastline <- raster("HYP_50M_SR_W.tif")
-
+#non riesco a caricare questi file 
 
