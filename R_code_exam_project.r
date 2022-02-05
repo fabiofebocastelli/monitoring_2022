@@ -90,6 +90,15 @@ forest_cover_change
 ggplot(forest_change, aes(x=reference_years, y= number_of_pixels, color= reference_years)) + geom_bar(stat="identity", fill="white") 
 + ggtitle ("Corine Land Cover Accounting Layers: 1.8 % of forest cover reduction between 2000 and 2018") 
 
+# provo a fare 2 nuovi istogrammi con i kmq per apprezzare meglio :
+
+fckmq00 <- 3464
+fckmq18 <- 3457
+Kmqforest <- c(fckmq00, fckmq18)
+kmforest_change <- data.frame(reference_years, Kmqforest)
+ggplot(kmforest_change, aes(x=reference_years, y= Kmqforest, color= reference_years)) + geom_bar(stat="identity", fill="white") + ggtitle ("CLC Accounting Layers: 1.8 % of forest cover reduction between 2000 and 2018: 6.5 Km^2")
+
+
 fdiff = clc_forest18 - clc_forest00
 fdiff
 class      : RasterLayer 
@@ -100,6 +109,8 @@ crs        : +proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS
 source     : r_tmp_2022-02-04_121500_4288_88587.grd 
 names      : layer 
 values     : -1, 1  (min, max)
+
+
 
 table(values(fdiff))
 
@@ -118,9 +129,18 @@ plot(fdiff)
 
 # suddivido l'immagine in 3 sottoimmagini per aumentare la risoluzione
 ext <- c(4e+06, 5200000, 2250000, 2800000)
-diff_north <- crop(fdiff, ext)
+fdiff_north <- crop(fdiff, ext)
 cl <- colorRampPalette(c("red","white","blue"))(100)
-plot(diff_north, col=cl)
+plot(fdiff_north, col=cl)
+summary(fdiff_north)
+ layer
+Min.       -1
+1st Qu.     0
+Median      0
+3rd Qu.     0
+Max.        1
+NA's        0
+
 
 
 # provo ad importare limmagine con i confine dell europa:
@@ -149,4 +169,14 @@ if (require(sp)) {
 plot(sldf_coast)
 }
 }
+
+
+# need to Raster reProjection:
+
+rfdiff_north <- projectRaster(fdiff_north, crs=+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0))
+
+sr <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0" 
+rfdiff_north <- projectRaster(fdiff_north, crs = sr)
+
+
 
