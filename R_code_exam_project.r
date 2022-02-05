@@ -77,7 +77,7 @@ diff_forest_cover <- forest_cover00 - forest_cover18
 10000*61190
 [1] 6119000 # sono i mq complessivbi persi di superfice boschiva. 6,2 kmq (il centro di bologna è 4,5 kmq), 612 ettari
 
- # cerco di ottenere u grafico con gli istogrammi 
+# cerco di ottenere un grafico con gli istogrammi 
 reference_years <- c("2000", "2018")
 number_of_pixels <- c(forest_cover00, forest_cover18)
 forest_change <- data.frame(reference_years, number_of_pixels) # creo un dataframe:
@@ -90,7 +90,7 @@ forest_cover_change
 ggplot(forest_change, aes(x=reference_years, y= number_of_pixels, color= reference_years)) + geom_bar(stat="identity", fill="white") 
 + ggtitle ("Corine Land Cover Accounting Layers: 1.8 % of forest cover reduction between 2000 and 2018") 
 
-# provo a fare 2 nuovi istogrammi con i kmq per apprezzare meglio :
+# 2 nuovi istogrammi con i kmq per apprezzare meglio il cambiamento :
 
 fckmq00 <- 3464
 fckmq18 <- 3457
@@ -150,10 +150,8 @@ eu_coastline <- raster("HYP_50M_SR_W.tif")
 #non riesco a caricare questi file 
 
 
-
-
-
 ### TENTATIVI RANDOM ###
+
 plotRGB(fdiff, r=3, g=2, b=1, stretch="Lin") # non si può usare
 
 #provo a mettere la coastline:
@@ -163,20 +161,38 @@ install.packages("devtools")
 devtools::install_github("ropensci/rnaturalearthhires")
 library("rnaturalearthhires")
 
+ #funzione trovata su internet:
 if (requireNamespace("rnaturalearthdata")) {
 sldf_coast <- ne_coastline()
 if (require(sp)) {
-plot(sldf_coast)
-}
-}
+plot(sldf_coast)}}
 
+# capisco che c'è bisogno di una Raster reProjection:
 
-# need to Raster reProjection:
+# Download global coastlines
+download.file("http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/physical/ne_10m_coastline.zip",destfile = 'coastlines.zip')
+# Unzip the downloaded file
+unzip(zipfile = "coastlines.zip",exdir = 'ne-coastlines-10m')
+# Load global coastline shapefile 
+coastlines= readOGR("ne-coastlines-10m/ne_10m_coastline.shp",verbose = FALSE)
+cl <- colorRampPalette(c("red","white","blue"))(100)
+plot(fdiff_north, col=cl)
+plot(coastlines, add=TRUE)      # non si aggiunge la coastline, probabilmente per crs non uguali, allora probabilmente prima devo fare il reproject:
+
+crs(coastlines): +proj=longlat +datum=WGS84 +no_defs 
+rfdiff_north <- projectRaster(fdiff_north, crs = crs(coastlines)) # ma mi da: Errore: non è possibile allocare un vettore di dimensione 4.6 Gb
+# e se facessi il contrario?
+rcoastlines <- projectRaster(coastlines, crs = crs(fdiff_north))
+
+# tentativi vari:
 
 rfdiff_north <- projectRaster(fdiff_north, crs=+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0))
 
-sr <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0" 
+sr <- "+proj=longlat +datum=WGS84 +no_defs " 
 rfdiff_north <- projectRaster(fdiff_north, crs = sr)
 
 
+#nuovo tentativo: 
+rfdiff_north = spTransform(fdiff_north, projection(coastlines))
+plot(rfdiff_north) # mi da la coastline del mondo e basta
 
