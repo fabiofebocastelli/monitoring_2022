@@ -181,8 +181,19 @@ plot(coastlines, add=TRUE)      # non si aggiunge la coastline, probabilmente pe
 
 crs(coastlines): +proj=longlat +datum=WGS84 +no_defs 
 rfdiff_north <- projectRaster(fdiff_north, crs = crs(coastlines)) # ma mi da: Errore: non è possibile allocare un vettore di dimensione 4.6 Gb
-# e se facessi il contrario?
-rcoastlines <- projectRaster(coastlines, crs = crs(fdiff_north))
+# allora estendo il limite di memoria ram utilizzabile consentita:
+memory.limit(size=56000)
+# reproject:
+rfdiff_north <- projectRaster(fdiff_north, crs = crs(coastlines))
+# plot con coastline:
+cl <- colorRampPalette(c("red","white","blue"))(100)
+plot(rfdiff_north, col=cl)
+plot(coastlines, add=TRUE) # viene tutto sballato..
+
+# provo ancora:
+ext <- c(42.7836, 48.3195, 5.672145, 21.76303)
+coastlines_north <- crop(coastlines, ext)
+plot(coastlines_north)
 
 # tentativi vari:
 
@@ -192,7 +203,23 @@ sr <- "+proj=longlat +datum=WGS84 +no_defs "
 rfdiff_north <- projectRaster(fdiff_north, crs = sr)
 
 
+ne_p = spTransform(coastlines, projection(fdiff_north))
+
 #nuovo tentativo: 
 rfdiff_north = spTransform(fdiff_north, projection(coastlines))
 plot(rfdiff_north) # mi da la coastline del mondo e basta
 
+
+if (requireNamespace("rnaturalearthdata")) {
+   coastlines <- ne_coastline()
+
+   if (require(sp)) {
+     plot(coastlines)}}
+
+# addborders
+
+if(requireNamespace("fdiff_north", quietly=TRUE)){
+plot(1, xlim=c(4e+06,5200000), ylim=c(2250000,2800000))
+addBorders()
+plot(1, xlim=c(4e+06,5200000), ylim=c(2250000,2800000))
+addBorders(de="Na", eu="black")}
