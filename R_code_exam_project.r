@@ -7,12 +7,26 @@ install.packages('ggplot2')
 install.packages('rgdal')
 install.packages('sp')
 install.packages('mapview')
+install.packages('gridExtra')
+install.packages('patchwork')
+install.packages("rnaturalearthdata")
+install.packages("devtools") 
+install.packages("rnaturalearth") 
+install.packages("viridis") 
+
 
 library(raster) 
 library(RStoolbox) 
 library(ggplot2) 
 library(rgdal) 
 library(sp)
+library(gridExtra)
+library(patchwork)
+library(rnaturalearthdata)
+library(devtools)
+library(rnaturalearth)
+library(viridis)
+
 # interessante : library(mapview) 
 
 setwd("C:/lab/clc_ al/")
@@ -33,7 +47,7 @@ attributes :
   to : 999  40471      999        999 (Nodata) 999 (Nodata)            999 (Nodata) 255 255 255 1.000000     1 1.000000
 
 #  uso crop function per diminuire l'area di studio alla sola Italia:
-ext <- c(4e+06, 5200000, 1200000, 2800000)
+ext <- c(4e+06, 5200000, 1400000, 2800000)
 clc00cropped <- crop(clc00, ext)
 
 forest_ID <- c(311, 312, 313, 321, 322, 323, 324)
@@ -58,11 +72,12 @@ forest_cover00 <- sum(values(clc_forest00), na.rm=TRUE)
 forest_cover00
 [1] 34635333 # ho trovato il numero dei pixel corrispondenti ai miei ID di interesse nel 2000!!!
 
+
 # ORA FACCIO LO STESSO CON IL 2018:
 
 clc18 <- raster("CLC2018ACC_V2018_20.tif")
 #  uso crop function per diminuire l'area di studio alla sola Italia:
-ext <- c(4e+06, 5200000, 1200000, 2800000)
+ext <- c(4e+06, 5200000, 1400000, 2800000)
 clc18cropped <- crop(clc18, ext)
 forest_ID <- c(311, 312, 313, 321, 322, 323, 324)
 clc_forest18 <- clc18cropped%in%forest_ID
@@ -98,7 +113,16 @@ Kmqforest <- c(fckmq00, fckmq18)
 kmforest_change <- data.frame(reference_years, Kmqforest)
 ggplot(kmforest_change, aes(x=reference_years, y= Kmqforest, color= reference_years)) + geom_bar(stat="identity", fill="white") + ggtitle ("CLC Accounting Layers: 1.8 % of forest cover reduction between 2000 and 2018: 6.5 Km^2")
 
+# grid.xtra per i due istogrammi
 
+p1 <- ggplot(forest_change, aes(x=reference_years, y= number_of_pixels, color= reference_years)) + geom_bar(stat="identity", fill="white") + ggtitle ("CLC Accounting Layers: 1.8 % of forest cover reduction between 2000 and 2018
+")
+
+p2 <- ggplot(kmforest_change, aes(x=reference_years, y= Kmqforest, color= reference_years)) + geom_bar(stat="identity", fill="white") + ggtitle ("CLC Accounting Layers: 1.8 % of forest cover reduction between 2000 and 2018: 6.5 Km^2")
+# now, the easiest approach to assemble multiple plots on a page is to use the grid.arrange() function from the gridExtra package, so:
+grid.arrange(p1, p2, nrow=1) # and you get both histograms together
+
+# calcolo la differenza tra i due raster:
 fdiff = clc_forest18 - clc_forest00
 fdiff
 class      : RasterLayer 
@@ -125,10 +149,11 @@ plot(clc_forest00)
 plot(clc_forest18)
 
 # faccio plot della differenza 
-plot(fdiff)
+cl <- colorRampPalette(c("red","white","blue"))(100)
+plot(fdiff, col=cl)
 
-# suddivido l'immagine in 3 sottoimmagini per aumentare la risoluzione
-ext <- c(4e+06, 5200000, 2250000, 2800000)
+# suddivido l'immagine in 2 sottoimmagini per aumentare la risoluzione
+ext <- c(4e+06, 5200000, 2000000, 2800000)
 fdiff_north <- crop(fdiff, ext)
 cl <- colorRampPalette(c("red","white","blue"))(100)
 plot(fdiff_north, col=cl)
@@ -143,11 +168,74 @@ NA's        0
 
 
 
-# provo ad importare limmagine con i confine dell europa:
-eu_coastline <- raster("Europe_coastline.shp") # non va
-eu_coastline <- raster("Europe_coastline_poly.shp")
-eu_coastline <- raster("HYP_50M_SR_W.tif")
-#non riesco a caricare questi file 
+# aggiungo i confini a fdiff
+sldf_countries = rnaturalearth::ne_countries()
+countries_sldf = spTransform(sldf_countries, projection(fdiff))
+ext <- c(4e+06, 5200000, 1400000, 2800000)
+cropped_countries_sldf <- crop(countries_sldf, ext)
+cl <- colorRampPalette(c("red","white","blue"))(100)
+plot(fdiff, col=cl)
+plot(cropped_countries_sldf, add=TRUE)
+
+
+
+divido o no?
+
+# aggiungo i confini a fdiff_north
+
+sldf_countries = rnaturalearth::ne_countries()
+countries_sldf = spTransform(sldf_countries, projection(fdiff_north))
+ext <- c(4e+06, 5200000, 2000000, 2800000)
+ncropped_countries_sldf <- crop(countries_sldf, ext)
+cl <- colorRampPalette(c("red","white","blue"))(100)
+plot(fdiff_north, col=cl)
+plot(ncropped_countries_sldf, add=TRUE)
+
+
+# faccio lo stesso per fdiff_south
+
+ext <- c(4e+06, 5200000, 1200000, 2000000)
+fdiff_south <- crop(fdiff, ext)
+
+sldf_countries = rnaturalearth::ne_countries()
+countries_sldf = spTransform(sldf_countries, projection(fdiff_south))
+ext <- c(4e+06, 5200000, 1200000, 2000000)
+scropped_countries_sldf <- crop(countries_sldf, ext)
+cl <- colorRampPalette(c("red","white","blue"))(100)
+plot(fdiff_south, col=cl)
+plot(scropped_countries_sldf, add=TRUE)
+
+
+# codice per esportare i grafici
+
+png('C:/lab/clc_ al//my_plot.png')
+cl <- colorRampPalette(c("red","white","blue"))(100)
+plot(fdiff_north, col=cl)
+plot(ncropped_countries_sldf, add=TRUE)
+dev.off()
+
+
+# gg plot ??
+
+
+ggplot() + 
+geom_raster(clc00, mapping = aes(x=x, y=y, fill=CLC2000ACC_V2018_20)) + 
+scale_fill_viridis(option="magma") +
+ggtitle("forest land cover in 2000")
+
+
+ggplot() +
+geom_raster(clc_forest00, mapping = aes(x=x, y=y, fill=layer)) +
+scale_fill_viridis(option="cividis") +
+ggtitle("cividis palette")
+
+
+
+
+
+
+
+
 
 
 ### TENTATIVI RANDOM ###
@@ -179,47 +267,6 @@ cl <- colorRampPalette(c("red","white","blue"))(100)
 plot(fdiff_north, col=cl)
 plot(coastlines, add=TRUE)      # non si aggiunge la coastline, probabilmente per crs non uguali, allora probabilmente prima devo fare il reproject:
 
-crs(coastlines): +proj=longlat +datum=WGS84 +no_defs 
-rfdiff_north <- projectRaster(fdiff_north, crs = crs(coastlines)) # ma mi da: Errore: non è possibile allocare un vettore di dimensione 4.6 Gb
-# allora estendo il limite di memoria ram utilizzabile consentita:
-memory.limit(size=56000)
-# reproject:
-rfdiff_north <- projectRaster(fdiff_north, crs = crs(coastlines))
-# plot con coastline:
-cl <- colorRampPalette(c("red","white","blue"))(100)
-plot(rfdiff_north, col=cl)
-plot(coastlines, add=TRUE) # viene tutto sballato..
-
-# provo ancora:
-ext <- c(42.7836, 48.3195, 5.672145, 21.76303)
-coastlines_north <- crop(coastlines, ext)
-plot(coastlines_north)
-
-# tentativi vari:
-
-rfdiff_north <- projectRaster(fdiff_north, crs=+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0))
-
-sr <- "+proj=longlat +datum=WGS84 +no_defs " 
-rfdiff_north <- projectRaster(fdiff_north, crs = sr)
 
 
-ne_p = spTransform(coastlines, projection(fdiff_north))
 
-#nuovo tentativo: 
-rfdiff_north = spTransform(fdiff_north, projection(coastlines))
-plot(rfdiff_north) # mi da la coastline del mondo e basta
-
-
-if (requireNamespace("rnaturalearthdata")) {
-   coastlines <- ne_coastline()
-
-   if (require(sp)) {
-     plot(coastlines)}}
-
-# addborders
-
-if(requireNamespace("fdiff_north", quietly=TRUE)){
-plot(1, xlim=c(4e+06,5200000), ylim=c(2250000,2800000))
-addBorders()
-plot(1, xlim=c(4e+06,5200000), ylim=c(2250000,2800000))
-addBorders(de="Na", eu="black")}
