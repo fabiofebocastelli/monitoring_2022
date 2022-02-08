@@ -134,8 +134,11 @@ source     : r_tmp_2022-02-04_121500_4288_88587.grd
 names      : layer 
 values     : -1, 1  (min, max)
 
+# faccio plot della differenza 
+cl <- colorRampPalette(c("red","white","blue"))(100)
+plot(fdiff, col=cl)
 
-
+# stats:
 table(values(fdiff))
 
        -1         0         1 
@@ -148,9 +151,7 @@ par(mfrow=c(1,2))
 plot(clc_forest00)
 plot(clc_forest18)
 
-# faccio plot della differenza 
-cl <- colorRampPalette(c("red","white","blue"))(100)
-plot(fdiff, col=cl)
+
 
 # suddivido l'immagine in 2 sottoimmagini per aumentare la risoluzione
 ext <- c(4e+06, 5200000, 2000000, 2800000)
@@ -215,30 +216,27 @@ plot(ncropped_countries_sldf, add=TRUE)
 dev.off()
 
 
-# gg plot ??
+# gg plot 
 
-
-ggplot() + 
-geom_raster(clc00, mapping = aes(x=x, y=y, fill=CLC2000ACC_V2018_20)) + 
-scale_fill_viridis(option="magma") +
-ggtitle("forest land cover in 2000")
-
-
+# clc_forest00:
 ggplot() +
 geom_raster(clc_forest00, mapping = aes(x=x, y=y, fill=layer)) +
 scale_fill_viridis(option="cividis") +
-ggtitle("cividis palette")
+ggtitle("forest land cover in 2000 ") + scale_color_viridis(discrete=TRUE)
+
+# clc_forest18
+ggplot() +
+geom_raster(clc_forest18, mapping = aes(x=x, y=y, fill=layer)) +
+scale_fill_viridis() +
+ggtitle("forest land cover in 2018 ")
+
+# stack
+
+all_plots <- stack(clc_forest00, clc_forest18, fdiff)
+plot(all_plots, col=cl)
 
 
-
-
-
-
-
-
-
-
-### TENTATIVI RANDOM ###
+###################################################################### TENTATIVI RANDOM #########################################################################################
 
 plotRGB(fdiff, r=3, g=2, b=1, stretch="Lin") # non si può usare
 
