@@ -113,29 +113,27 @@ diff_forest_cover <- forest_cover00 - forest_cover18
 reference_years <- c("2000", "2018")
 number_of_pixels <- c(forest_cover00, forest_cover18)
 forest_change <- data.frame(reference_years, number_of_pixels) # creo un dataframe:
-forest_cover_change
+forest_change
   reference_years forest_change
 1            2000      34635333
 2            2018      34574143
 
 # ottengo gli istogrammi dei due anni:
-ggplot(forest_change, aes(x=reference_years, y= number_of_pixels, color= reference_years)) + geom_bar(stat="identity", fill="white") 
-+ ggtitle ("Corine Land Cover Accounting Layers: 1.8 % of forest cover reduction between 2000 and 2018") 
+ggplot(forest_change, aes(x=reference_years, y= number_of_pixels, color= reference_years)) + geom_bar(stat="identity", fill="white") + ggtitle ("CLCAL: 1.8 % of forest cover loss between 2000 and 2018") 
 
-# 2 nuovi istogrammi con i kmq per apprezzare meglio il cambiamento :
+# 2 nuovi istogrammi con i kmq per apprezzare meglio il cambiamento:
 
-fckmq00 <- 3464
-fckmq18 <- 3457
-Kmqforest <- c(fckmq00, fckmq18)
-kmforest_change <- data.frame(reference_years, Kmqforest)
-ggplot(kmforest_change, aes(x=reference_years, y= Kmqforest, color= reference_years)) + geom_bar(stat="identity", fill="white") + ggtitle ("CLC Accounting Layers: 1.8 % of forest cover reduction between 2000 and 2018: 6.5 Km^2")
+fcsqKm00 <- 3464
+fcsqKm18 <- 3457
+sqKm_forest <- c(fcsqKm00, fcsqKm18)
+sqKm_forest_change <- data.frame(reference_years, sqKm_forest)
+ggplot(sqKm_forest_change, aes(x=reference_years, y= sqKm_forest, color= reference_years)) + geom_bar(stat="identity", fill="white") + ggtitle ("CLCAL: 1.8 % of forest cover loss between 2000 and 2018: 6.5 Km^2")
 
-# grid.xtra per i due istogrammi
+# grid.extra per i due istogrammi
 
-p1 <- ggplot(forest_change, aes(x=reference_years, y= number_of_pixels, color= reference_years)) + geom_bar(stat="identity", fill="white") + ggtitle ("CLC Accounting Layers: 1.8 % of forest cover reduction between 2000 and 2018
-")
+p1 <- ggplot(forest_change, aes(x=reference_years, y= number_of_pixels, color= reference_years)) + geom_bar(stat="identity", fill="white") + ggtitle ("CLCAL: 1.8 % of forest cover loss between 2000 and 2018")
 
-p2 <- ggplot(kmforest_change, aes(x=reference_years, y= Kmqforest, color= reference_years)) + geom_bar(stat="identity", fill="white") + ggtitle ("CLC Accounting Layers: 1.8 % of forest cover reduction between 2000 and 2018: 6.5 Km^2")
+p2 <- ggplot(kmforest_change, aes(x=reference_years, y= Kmqforest, color= reference_years)) + geom_bar(stat="identity", fill="white") + ggtitle ("CLCAL: 1.8 % of forest cover loss between 2000 and 2018: 6.5 Km^2")
 # now, the easiest approach to assemble multiple plots on a page is to use the grid.arrange() function from the gridExtra package, so:
 grid.arrange(p1, p2, nrow=1) # and you get both histograms together
 
@@ -165,8 +163,9 @@ table(values(fdiff))
 # metto i due grafici insieme con par function 
 
 par(mfrow=c(1,2))
-plot(clc_forest00)
-plot(clc_forest18)
+ggplot() + geom_raster(clc_forest00, mapping = aes(x=x, y=y, fill=layer)) + scale_fill_viridis(option="cividis") + ggtitle("forest land cover in 2000 ") 
+ggplot() + geom_raster(clc_forest18, mapping = aes(x=x, y=y, fill=layer)) + scale_fill_viridis() + ggtitle("forest land cover in 2018 ")
+
 
 
 
@@ -241,7 +240,7 @@ dev.off()
 ggplot() +
 geom_raster(clc_forest00, mapping = aes(x=x, y=y, fill=layer)) +
 scale_fill_viridis(option="cividis") +
-ggtitle("forest land cover in 2000 ") + scale_color_viridis(discrete=TRUE)
+ggtitle("forest land cover in 2000 ") 
 
 # clc_forest18
 ggplot() +
