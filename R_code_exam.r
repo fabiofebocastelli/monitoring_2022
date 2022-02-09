@@ -76,11 +76,28 @@ forest_cover00
 # ORA FACCIO LO STESSO CON IL 2018:
 
 clc18 <- raster("CLC2018ACC_V2018_20.tif")
+clc18
+class      : RasterLayer 
+dimensions : 46000, 65000, 2.99e+09  (nrow, ncol, ncell)
+resolution : 100, 100  (x, y)
+extent     : 9e+05, 7400000, 9e+05, 5500000  (xmin, xmax, ymin, ymax)
+crs        : +proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +units=m +no_defs 
+source     : CLC2018ACC_V2018_20.tif 
+names      : CLC2018ACC_V2018_20 
+values     : 111, 999  (min, max)
+attributes :
+        ID  COUNT CLC_CODE              LABEL1       LABEL2                  LABEL3   R   G   B      RED GREEN     BLUE
+ from: 111 791482      111 Artificial surfaces Urban fabric Continuous urban fabric 230   0  77 0.901961     0 0.301961
+  to : 999  40471      999        999 (Nodata) 999 (Nodata)            999 (Nodata) 255 255 255 1.000000     1 1.000000
+
+
 #  uso crop function per diminuire l'area di studio alla sola Italia:
 ext <- c(4e+06, 5200000, 1400000, 2800000)
 clc18cropped <- crop(clc18, ext)
 forest_ID <- c(311, 312, 313, 321, 322, 323, 324)
 clc_forest18 <- clc18cropped%in%forest_ID
+clc_forest18
+
 plot(clc_forest18)
 # quanti sono i pixel in cui values=1 is True?
 # prendo consigli da: https://gis.stackexchange.com/questions/422711/how-to-get-the-number-of-pixel-with-a-given-value-from-a-rasterlayer-in-r/422713#422713
@@ -89,7 +106,7 @@ forest_cover18 <- sum(values(clc_forest18), na.rm=TRUE)
 diff_forest_cover <- forest_cover00 - forest_cover18
 [1] 61190 # c'è stata una diminuzione della copertura forestale complessiva di 61190 pixel, ovvero del 1.8 % 
 # la risoluzione è di 100 m (https://sdi.eea.europa.eu/catalogue/srv/eng/catalog.search#/metadata/5a5f43ca-1447-4ed0-b0a6-4bd2e17e4f4d)
-10000*61190
+100*61190
 [1] 6119000 # sono i mq complessivbi persi di superfice boschiva. 6,2 kmq (il centro di bologna è 4,5 kmq), 612 ettari
 
 # cerco di ottenere un grafico con gli istogrammi 
@@ -179,7 +196,7 @@ plot(fdiff, col=cl)
 plot(cropped_countries_sldf, add=TRUE)
 
 
-
+************************************************************************************************************************************************************************
 divido o no?
 
 # aggiungo i confini a fdiff_north
@@ -206,6 +223,7 @@ cl <- colorRampPalette(c("red","white","blue"))(100)
 plot(fdiff_south, col=cl)
 plot(scropped_countries_sldf, add=TRUE)
 
+************************************************************************************************************************************************************************
 
 # codice per esportare i grafici
 
@@ -215,6 +233,7 @@ plot(fdiff_north, col=cl)
 plot(ncropped_countries_sldf, add=TRUE)
 dev.off()
 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 # gg plot 
 
@@ -235,7 +254,11 @@ ggtitle("forest land cover in 2018 ")
 all_plots <- stack(clc_forest00, clc_forest18, fdiff)
 plot(all_plots, col=cl)
 
+°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°RESULTS°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
 
+[1] 6119000 # sono i mq complessivi persi di superfice boschiva. 6,2 kmq (il centro di bologna è 4,5 kmq), 612 ettari
+#da 112 a 140
+#154-156
 ###################################################################### TENTATIVI RANDOM #########################################################################################
 
 plotRGB(fdiff, r=3, g=2, b=1, stretch="Lin") # non si può usare
