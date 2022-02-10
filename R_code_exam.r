@@ -190,8 +190,8 @@ plot(countries_sldf, add=TRUE)
 # let's get some stats:
 table(values(fdiff))
 
-       -1         0         1 
-   184463 191692264    123273   # 123273 è il numero di pixels in cui è avvenuto rimboschimento: 12,3 Kmq. 1.233 ettari
+#       -1         0         1 
+#   184463 191692264    123273   # 123273 è il numero di pixels in cui è avvenuto rimboschimento: 12,3 Kmq. 1.233 ettari
 
 mapview(fdiff) # beautiful interactive map
 
