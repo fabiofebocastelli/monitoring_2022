@@ -13,6 +13,8 @@ install.packages("rnaturalearthdata")
 install.packages("devtools") 
 install.packages("rnaturalearth") 
 install.packages("viridis") 
+install.packages("gridBase") 
+install.packages("grid") 
 
 
 library(raster) 
@@ -26,6 +28,8 @@ library(rnaturalearthdata)
 library(devtools)
 library(rnaturalearth)
 library(viridis)
+library(gridBase)
+library(grid)
 
 # interessante : library(mapview) 
 
@@ -226,10 +230,13 @@ plot(scropped_countries_sldf, add=TRUE)
 
 # codice per esportare i grafici
 
-png('C:/lab/clc_ al//my_plot.png')
+png('C:/lab/clc_ al//fdiff.png')
+sldf_countries = rnaturalearth::ne_countries()
+countries_sldf = spTransform(sldf_countries, projection(fdiff))
 cl <- colorRampPalette(c("red","white","blue"))(100)
-plot(fdiff_north, col=cl)
-plot(ncropped_countries_sldf, add=TRUE)
+plot(fdiff, main = "forest dynamics between 2000 and 2018",  col=cl)
+plot(countries_sldf, add=TRUE)
+
 dev.off()
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -253,11 +260,73 @@ ggtitle("forest land cover in 2018 ")
 all_plots <- stack(clc_forest00, clc_forest18, fdiff)
 plot(all_plots, col=cl)
 
+
+
+# clc_forest00:
+p1 <- ggplot() +
+geom_raster(clc_forest00, mapping = aes(x=x, y=y, fill=layer)) +
+scale_fill_viridis(option="cividis") +
+ggtitle("forest land cover in 2000 ") 
+
+# clc_forest18
+p2 <- ggplot() +
+geom_raster(clc_forest18, mapping = aes(x=x, y=y, fill=layer)) +
+scale_fill_viridis() +
+ggtitle("forest land cover in 2018 ")
+
+sldf_countries = rnaturalearth::ne_countries()
+countries_sldf = spTransform(sldf_countries, projection(fdiff))
+cl <- colorRampPalette(c("red","white","blue"))(100)
+plot(fdiff, main = "forest dynamics between 2000 and 2018",  col=cl)
+plot(countries_sldf, add=TRUE)
+
+grid.arrange(p1, p2, ncol=2)
+
+
+# stack
+
+all_plots <- stack(p1, p2, fdiff)
+plot(all_plots, col=cl)
+
+ ggplot() +
+geom_raster(all_plots, mapping = aes(x=x, y=y, fill=layer.1, layer.2, layer.3)) +
+scale_fill_viridis() +
+ggtitle("forest land cover in 2018 ")
+
+......................................................................tentativo di mettere assieme ggplot() e plot()...........................................................
+
+par(mfrow=c(2, 2))
+plot.new() 
+vps <- baseViewports()
+pushViewport(vps$figure)
+vp1 <-plotViewport(c(1.8,1,0,1)) 
+require(ggplot2)
+p1 <- ggplot() +
+geom_raster(clc_forest00, mapping = aes(x=x, y=y, fill=layer)) +
+scale_fill_viridis(option="cividis") +
+ggtitle("forest land cover in 2000 ") 
+p2 <- ggplot() +
+geom_raster(clc_forest18, mapping = aes(x=x, y=y, fill=layer)) +
+scale_fill_viridis() +
+ggtitle("forest land cover in 2018 ")
+theme(plot.title = element_text(size = rel(1.4),face ='bold'))
+print(p1, vp=vp1)  
+
+plot(fdiff, main = "Time series",  col=cl)
+plot(countries_sldf, add=TRUE)
+
 °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°RESULTS°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
 
 [1] 6119000 # sono i mq complessivi persi di superfice boschiva. 6,2 kmq (il centro di bologna è 4,5 kmq), 612 ettari
 #da 112 a 140
 #154-156
+
+
+
+
+
+
+
 ###################################################################### TENTATIVI RANDOM #########################################################################################
 
 plotRGB(fdiff, r=3, g=2, b=1, stretch="Lin") # non si può usare
