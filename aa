@@ -1,0 +1,11 @@
+
+
+
+clc_f00 <- clc00%in%forest_ID
+clc_f18 <- clc18%in%forest_ID
+nfdiff = clc_f18 - clc_f00
+mapview(nfdiff)
+
+
+forest_cover00 <- sum(values(clc_forest00), na.rm=TRUE)
+Error: cannot allocate vector of size 5.2 Gb
