@@ -73,7 +73,9 @@ ggplot() + geom_raster(clc_forest00, mapping = aes(x=x, y=y, fill=layer)) + scal
 
 # I want to know for how many pixels value=1 is TRUE in clc_forest00
 # got some tips from: https://gis.stackexchange.com/questions/422711/how-to-get-the-number-of-pixel-with-a-given-value-from-a-rasterlayer-in-r/422713#422713
-sum(values(clc_forest00), na.rm=TRUE):
+sum(values(clc_forest00), na.rm=TRUE): # I got "Error: cannot allocate vector of size ...Mb"
+memory.limit(size=56000) # I need to increase memory available to R processes. Set the limit size to 56000 Mb
+sum(values(clc_forest00), na.rm=TRUE) # sum() function doesn’t give desired output if NAs are present in the vector. so it has to be handled by using na.rm=TRUE
 [1] 34635333
 forest_cover00 <- sum(values(clc_forest00), na.rm=TRUE)
 forest_cover00
